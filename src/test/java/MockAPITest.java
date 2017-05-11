@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
@@ -21,13 +22,17 @@ public class MockAPITest {
     @Test
     public void testMockAPI() throws Exception {
         given().
-                accept(ContentType.JSON).
-        when()
+                accept(ContentType.JSON)
+                .expect().statusLine(containsString("200 OK")).
+
+                when()
                 .get("/users/octocat/orgs")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .contentType(equalTo("application/json; charset=utf-8"));
+
+//        expect().body(equalTo("ERROR")).when().get("/409");
     }
 
     @Test

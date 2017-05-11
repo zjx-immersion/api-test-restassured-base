@@ -1,4 +1,6 @@
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,8 +14,20 @@ public class MockAPITest {
 
     @Before
     public void setup() {
-        RestAssured.port = 80;
-        RestAssured.baseURI = "http://md5.jsontest.com";
+//        RestAssured.port = 80;
+        RestAssured.baseURI = "https://api.github.com";
+    }
+
+    @Test
+    public void testMockAPI() throws Exception {
+        given().
+                accept(ContentType.JSON).
+        when()
+                .get("/users/octocat/orgs")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(equalTo("application/json; charset=utf-8"));
     }
 
     @Test
@@ -21,7 +35,7 @@ public class MockAPITest {
         given().
                 parameters("text", "test").
                 when().
-                get("").
+                get("http://md5.jsontest.com").
                 then().
                 body("md5",equalTo("098f6bcd4621d373cade4e832627b4f6")).
                 and().
